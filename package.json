@@ -1,0 +1,26 @@
+{
+  "name": "google-images-downloader",
+  "version": "0.0.1",
+  "description": "Google image downloader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bernardstanislas/google-images.git"
+  },
+  "keywords": [
+    "google",
+    "image"
+  ],
+  "author": "Stanislas Bernard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bernardstanislas/google-images/issues"
+  },
+  "homepage": "https://github.com/Bernardstanislas/google-images",
+  "dependencies": {
+    "google-images": "^0.1.0"
+  }
+}
