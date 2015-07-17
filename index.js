@@ -20,7 +20,7 @@ if (!fs.existsSync(downloadsFolder)) {
 }
 
 
-for (var index = 0; index < 10 / 4; index++) { // Results are given 4 by 4, strange Google ajax API
+for (var index = 0; index < hits / 4; index++) { // Results are given 4 by 4, strange Google ajax API
     client.search({
         for: query,
         page: 4 * index,
