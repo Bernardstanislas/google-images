@@ -10,7 +10,7 @@ var api = {
     call: function(method, params, callback) {
         params = params || {};
         params['api_key'] = credentials.key;
-        params['per_page'] = 200;
+        params['per_page'] = 100;
         params.sort = 'interestingness-desc';
         params.method = method;
         params.format = 'json';

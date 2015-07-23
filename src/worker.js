@@ -28,26 +28,22 @@ var worker = {
                 cb(null, parsedPhotos);
             }, page);
         }, function(error, results) {
-            // Results is an array of parsed photos, so concat it all !
-            var parsedPhotos = results.reduce(function(result, chunk) {
-                result = result.concat(chunk);
-                return result;
-            }, []);
-            // Eventually send back all the parsed photos
-            callback(parsedPhotos);
+            callback(results);
         });
     },
-    fetch: function(photos, destination, progressReporter, callback) {
+    fetch: function(preparedPhotos, destination, progressReporter, callback) {
         var self = this;
 
         // Create the async calls, page by page (avoid socket overloading)
-        async.series(photos.map(function(photo) {
+        async.series(preparedPhotos.map(function(onePagePhotos) {
             return function(cb) {
-                // Get the photo and pipe it to the save method
-                api.fetchPhoto(photo.url).pipe(self.save(destination, photo.title, photo.id).on('finish', function() {
-                    progressReporter();
-                    cb();
-                }));
+                async.map(onePagePhotos, function(photo, subCb) {
+                    // Get the photo and pipe it to the save method
+                    api.fetchPhoto(photo.url).pipe(self.save(destination, photo.title, photo.id).on('finish', function() {
+                        progressReporter();
+                        subCb();
+                    }));
+                }, cb);
             };
         }), callback);
     },

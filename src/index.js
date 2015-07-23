@@ -11,6 +11,8 @@ var destination = __dirname + '/../downloads/';
 // Build the CLI
 
 console.log('Hello there ! Welcome to the image downloader.');
+console.log();
+console.log('Please enter your query (for example, "steak frites")');
 
 // Schema for total prompt
 var totalSchema = {
