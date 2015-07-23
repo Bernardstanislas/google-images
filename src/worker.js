@@ -39,14 +39,17 @@ var worker = {
     },
     fetch: function(photos, destination, progressReporter, callback) {
         var self = this;
-        // Create the async calls
-        async.map(photos, function(photo, cb) {
-            // Get the photo and pipe it to the save method
-            api.fetchPhoto(photo.url, cb).pipe(self.save(destination, photo.title, photo.id).on('finish', progressReporter));
-        }, function() {
-            // Explicit the function, to get rid of the empty array
-            callback();
-        });
+
+        // Create the async calls, page by page (avoid socket overloading)
+        async.series(photos.map(function(photo) {
+            return function(cb) {
+                // Get the photo and pipe it to the save method
+                api.fetchPhoto(photo.url).pipe(self.save(destination, photo.title, photo.id).on('finish', function() {
+                    progressReporter();
+                    cb();
+                }));
+            };
+        }), callback);
     },
     save: function(destination, title, id) {
         // Save it to the file system

@@ -10,6 +10,8 @@ var api = {
     call: function(method, params, callback) {
         params = params || {};
         params['api_key'] = credentials.key;
+        params['per_page'] = 200;
+        params.sort = 'interestingness-desc';
         params.method = method;
         params.format = 'json';
 
@@ -29,8 +31,8 @@ var api = {
             }
         });
     },
-    fetchPhoto: function(url, callback) {
-        return request.get(url, callback)
+    fetchPhoto: function(url) {
+        return request.get(url)
             .on('error', function(err) {
                 console.log(err);
             });
