@@ -1,9 +1,10 @@
 {
-  "name": "google-images-downloader",
-  "version": "0.0.1",
-  "description": "Google image downloader",
-  "main": "index.js",
+  "name": "images-downloader",
+  "version": "1.0.0",
+  "description": "Image downloader",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +23,7 @@
   "homepage": "https://github.com/Bernardstanislas/google-images",
   "dependencies": {
     "async": "^1.4.0",
-    "commander": "^2.8.1",
+    "progress": "^1.1.8",
     "prompt": "^0.2.14",
     "request": "^2.58.0"
   }

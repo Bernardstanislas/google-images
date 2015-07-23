@@ -24,7 +24,7 @@ var worker = {
             self.search(tags, function(response) {
                 var photos = response.photos.photo;
                 var parsedPhotos = photos.map(parser.parse);
-                progressReporter();
+                progressReporter(1);
                 cb(null, parsedPhotos);
             }, page);
         }, function(error, results) {

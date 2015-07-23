@@ -2,6 +2,7 @@
 
 var worker = require('./worker');
 var prompt = require('prompt');
+var ProgressBar = require('progress');
 
 // Params
 
@@ -57,17 +58,26 @@ prompt.get(querySchema, function(error, data) {
                 process.exit(1);
             }
             // We got the total, let's fetch !
-            var preparationProgress = 0;
             var totalPages = Math.floor((data.total - 1) / summary.perPage) + 1;
-            worker.prepareFetch(summary, tags, data.total, function reportProgress() {
-                console.log('Preparation : ' + Math.round(100 * ++preparationProgress / totalPages) + '%');
-            }, function fetchPhotos(preparedPhotos) {
+            var bar = new ProgressBar('Retrieving photos urls [:bar] :percent :etas', {
+                complete: '=',
+                incomplete: ' ',
+                width: 20,
+                total: totalPages
+            });
+            worker.prepareFetch(summary, tags, data.total, bar.tick.bind(bar), function fetchPhotos(preparedPhotos) {
                 var totalPhotos = totalPages * summary.perPage;
-                var fetchProgress = 0;
-                worker.fetch(preparedPhotos, destination, function reportProgress() {
-                    console.log('Download : ' + Math.round(100 * ++fetchProgress / totalPhotos) + '%');
-                }, function onAllDone() {
-                    console.log('All done !');
+                var bar = new ProgressBar('Downloading photos     [:bar] :percent :etas', {
+                    complete: '=',
+                    incomplete: ' ',
+                    width: 20,
+                    total: totalPhotos
+                });
+                worker.fetch(preparedPhotos, destination, bar.tick.bind(bar), function onAllDone() {
+                    setTimeout(function() {
+                        console.log();
+                        console.log('All done !');
+                    }, 10);
                 });
             });
         });
