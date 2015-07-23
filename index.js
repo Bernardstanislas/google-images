@@ -1,44 +1,37 @@
-var client = require('google-images');
+"use strict";
+
+var credentials = require('./credentials.json');
 var fs = require('fs');
+var request = require('request');
 
-var arguments = process.argv.slice(2);
+var args = process.argv.slice(2);
 
-var query = arguments[0];
-var hits = arguments[1];
+var query = args[0].replace(' ', ',');
+var hits = args[1];
 
-var downloadsFolder = __dirname + '/downloads/' + query;
-
-var progress = 0;
-var total = 4 * Math.ceil(hits / 4);
-
-// Prepare downloads folder
-if (!fs.existsSync(__dirname + '/downloads')) {
-    fs.mkdirSync(__dirname + '/downloads');
-}
-if (!fs.existsSync(downloadsFolder)) {
-    fs.mkdirSync(downloadsFolder);
-}
+var host = 'https://flickr.com/services/rest';
 
 
-for (var index = 0; index < hits / 4; index++) { // Results are given 4 by 4, strange Google ajax API
-    client.search({
-        for: query,
-        page: 4 * index,
-        callback: function(err, images) {
-            if (err) {
-                throw err;
-            }
-            images.forEach(function(image) {
-                var fileName = image.url.match(/[^\/]*$/)[0];
-                var filePath = downloadsFolder + '/' + fileName;
-                if (fs.existsSync(filePath)) {
-                    fs.unlinkSync(filePath);
-                }
-                image.writeTo(downloadsFolder + '/' + fileName, function() {
-                    progress++;
-                    console.info('Progress : ' + Math.round(progress * 100 / total) + ' %');
-                });
-            });
+function callAPI(method, params, callback) {
+    params = params || {};
+    params['api_key'] = credentials.key;
+    params.method = method;
+    params.format = 'json';
+    request.post({url: host, formData: params}, function(err, httpResponse, body) {
+        if (err) {
+            throw err;
+        }
+        if (httpResponse.statusCode === 200) {
+            // Clean the response
+            var start = body.indexOf('{');
+            var end = body.lastIndexOf('}');
+            var cleanedBody = body.substring(start, end + 1);
+            callback(cleanedBody);
         }
     });
 }
+
+callAPI('flickr.photos.search', {tags: query}, function(payload) {
+    var results = JSON.parse(payload);
+    console.log('Found ' + results.photos.total + ' hits.');
+});

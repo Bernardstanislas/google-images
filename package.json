@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/Bernardstanislas/google-images",
   "dependencies": {
-    "google-images": "^0.1.0"
+    "async": "^1.4.0",
+    "commander": "^2.8.1",
+    "prompt": "^0.2.14",
+    "request": "^2.58.0"
   }
 }
