@@ -8,7 +8,11 @@ Works with NodeJS, download it [here](https://nodejs.org/).
 Once installed, run in the project directory :
 ```bash
 npm install
-````
+```
+
+## Configuration
+
+Provide your API key in the `config.json` file.
 
 ## Usage
 
